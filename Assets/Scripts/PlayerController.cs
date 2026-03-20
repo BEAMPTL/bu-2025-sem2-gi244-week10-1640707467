@@ -8,6 +8,9 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem explosionParticle;
     public ParticleSystem dirtParticle;
 
+    public int maxHP = 3;
+    private int currentHP;
+
     public bool isDashing = false;
     private InputAction dashAction;
 
@@ -36,6 +39,8 @@ public class PlayerController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        currentHP = maxHP;
+
         Physics.gravity *= gravityModifier;
 
         dashAction = InputSystem.actions.FindAction("Sprint");
@@ -69,15 +74,20 @@ public class PlayerController : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("Obstacle"))
         {
-            Debug.Log("Game Over!");
-            gameOver = true;
-            playerAnim.SetBool("Death_b", true);
-            playerAnim.SetInteger("DeathType_int", 1);
-            explosionParticle.Play();
-            dirtParticle.Stop();
+            currentHP--; 
+            explosionParticle.Play(); 
             playerAudio.PlayOneShot(crashSfx);
+            Destroy(collision.gameObject); 
+            if (currentHP <= 0)
+            {
+                Debug.Log("Game Over!");
+                gameOver = true;
+                playerAnim.SetBool("Death_b", true);
+                playerAnim.SetInteger("DeathType_int", 1);
+                dirtParticle.Stop();
+            }
         }
-        
+
     }
 
 }
