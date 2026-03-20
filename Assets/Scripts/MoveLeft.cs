@@ -16,10 +16,18 @@ public class MoveLeft : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!playerController.gameOver)
+        float currentSpeed = speed;
+
+        if (playerController.isDashing)
+
         {
-            transform.Translate(Vector3.left * Time.deltaTime * speed);
+
+            currentSpeed *= 2f;
+
         }
+
+        transform.Translate(Vector3.left * Time.deltaTime * currentSpeed);
+
 
         if (transform.position.x < leftBound && gameObject.CompareTag("Obstacle"))
         {
