@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController2 : MonoBehaviour
 {
     public float jumpForce;
     public float gravityModifier;
@@ -50,10 +50,9 @@ public class PlayerController : MonoBehaviour
 
         jumpAction = InputSystem.actions.FindAction("Jump");
 
-        shootAction = InputSystem.actions.FindAction("Fire");
-
         gameOver = false;
-        
+
+        shootAction = InputSystem.actions.FindAction("Fire");
     }
 
     // Update is called once per frame
