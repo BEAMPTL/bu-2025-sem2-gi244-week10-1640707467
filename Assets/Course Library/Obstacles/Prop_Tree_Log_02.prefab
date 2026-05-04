@@ -31,8 +31,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -105,7 +105,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3deb3c3f12d4b4c47afac0cc51e7dd31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MoveLeft
-  speed: 10
+  startSpeed: 10
+  speedIncreaseRate: 0.2
+  maxSpeed: 100
 --- !u!54 &-5979657176036591169
 Rigidbody:
   m_ObjectHideFlags: 0

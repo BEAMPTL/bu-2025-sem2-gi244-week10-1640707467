@@ -1,31 +1,53 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
     public GameObject[] obstaclePrefab;
-    public Vector3 spawnPos = new(25, 0, 0);
+    public Vector3 spawnPos = new Vector3(25, 0, 0);
 
-    public float startDelay = 2;
-    public float repeatRate = 2;
+    public float startDelay = 2f;
+
+    public float startMinDelay = 1f;
+    public float startMaxDelay = 3f;
+
+    public float minLimitDelay = 0.5f;
+    public float difficultyRate = 0.1f;
 
     private PlayerController playerController;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // Instantiate(obstaclePrefab, new Vector3(25, 0, 0), obstaclePrefab.transform.rotation);
+        playerController = FindObjectOfType<PlayerController>();
+        StartCoroutine(SpawnRoutine());
+    }
 
-        InvokeRepeating(nameof(SpawnObstacle), startDelay, repeatRate);
+    IEnumerator SpawnRoutine()
+    {
+        yield return new WaitForSeconds(startDelay);
 
-        playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+        while (!playerController.gameOver)
+        {
+            SpawnObstacle();
 
+            float minDelay = Mathf.Max(
+                minLimitDelay,
+                startMinDelay - Time.timeSinceLevelLoad * difficultyRate
+            );
+
+            float maxDelay = Mathf.Max(
+                minDelay + 0.5f,
+                startMaxDelay - Time.timeSinceLevelLoad * difficultyRate
+            );
+
+            float randomDelay = Random.Range(minDelay, maxDelay);
+
+            yield return new WaitForSeconds(randomDelay);
+        }
     }
 
     void SpawnObstacle()
     {
-        if (playerController.gameOver) return;
-
         int index = Random.Range(0, obstaclePrefab.Length);
         GameObject selectedObstacle = obstaclePrefab[index];
         Instantiate(selectedObstacle, spawnPos, selectedObstacle.transform.rotation);

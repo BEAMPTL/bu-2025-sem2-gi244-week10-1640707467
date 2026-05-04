@@ -1,8 +1,13 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class MoveLeft : MonoBehaviour
 {
-    public float speed = 10f;
+    public float startSpeed = 10f;
+    public float speedIncreaseRate = 0.2f;
+    public float maxSpeed = 30f;
+    private bool hasScored = false;
+
+    private float currentSpeed;
 
     private float leftBound = -15;
 
@@ -10,26 +15,37 @@ public class MoveLeft : MonoBehaviour
 
     void Start()
     {
-        playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+        playerController = FindObjectOfType<PlayerController>();
+        currentSpeed = startSpeed;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (!playerController.gameOver) 
+        if (playerController == null)
         {
+            playerController = FindObjectOfType<PlayerController>();
+            return;
+        }
 
-            float currentSpeed = speed;
+        if (!playerController.gameOver)
+        {
+            currentSpeed += speedIncreaseRate * Time.deltaTime;
+            currentSpeed = Mathf.Clamp(currentSpeed, startSpeed, maxSpeed);
+
+            float moveSpeed = currentSpeed;
 
             if (playerController.isDashing)
-
             {
-
-                currentSpeed *= 2f;
-
+                moveSpeed *= 2f;
             }
 
-            transform.Translate(Vector3.left * Time.deltaTime * currentSpeed);
+            transform.Translate(Vector3.left * Time.deltaTime * moveSpeed);
+        }
+
+        if (!hasScored && transform.position.x < 0 && gameObject.CompareTag("Obstacle"))
+        {
+            playerController.AddScore(50);
+            hasScored = true;
         }
 
         if (transform.position.x < leftBound && gameObject.CompareTag("Obstacle"))
