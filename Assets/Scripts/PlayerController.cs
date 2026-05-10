@@ -11,6 +11,19 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem explosionParticle;
     public ParticleSystem dirtParticle;
 
+    public bool canTeleport = false;
+    public Transform teleportPoint;
+    public float teleportCooldown = 5f;
+    private bool canTeleportNow = true;
+    public TextMeshProUGUI teleportText;
+
+    public bool canMelee = false;
+    public float attackRange = 3f;
+    public float meleeCooldown = 3f;
+    private bool canAttack = true;
+    public TextMeshProUGUI meleeText;
+
+    public bool canShoot = true;
     public GameObject bulletPrefab;
     public Transform firePoint;
     private InputAction shootAction;
@@ -76,6 +89,10 @@ public class PlayerController : MonoBehaviour
 
         currentAmmo = maxAmmo;
         UpdateAmmoUI();
+        if (!canShoot)
+        {
+            ammoText.gameObject.SetActive(false);
+        }
 
         dashAction = InputSystem.actions.FindAction("Sprint");
 
@@ -109,7 +126,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (shootAction.triggered && !gameOver && !isReloading)
+        if (canShoot && shootAction.triggered && !gameOver && !isReloading)
         {
             if (currentAmmo > 0)
             {
@@ -122,6 +139,16 @@ public class PlayerController : MonoBehaviour
                     StartCoroutine(Reload());
                 }
             }
+        }
+        if (canMelee && shootAction.triggered && !gameOver && canAttack)
+        {
+            MeleeAttack();
+            StartCoroutine(MeleeCooldown());
+        }
+        if (canTeleport && shootAction.triggered && !gameOver && canTeleportNow)
+        {
+            Teleport();
+            StartCoroutine(TeleportCooldown());
         }
     }
 
@@ -147,6 +174,79 @@ public class PlayerController : MonoBehaviour
     void Shoot()
     {
         Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+    }
+    void MeleeAttack()
+    {
+        Collider[] hitObjects = Physics.OverlapSphere(transform.position, attackRange);
+
+        foreach (Collider hit in hitObjects)
+        {
+            if (hit.CompareTag("Obstacle"))
+            {
+                Destroy(hit.gameObject);
+            }
+        }
+
+        Debug.Log("Melee Attack!");
+    }
+
+    IEnumerator MeleeCooldown()
+    {
+        canAttack = false;
+
+        float timer = meleeCooldown;
+
+        while (timer > 0)
+        {
+            if (meleeText != null)
+            {
+                meleeText.text = "Cooldown: " + timer.ToString("F1");
+            }
+
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+
+        if (meleeText != null)
+        {
+            meleeText.text = "Ready!";
+        }
+
+        canAttack = true;
+    }
+    void Teleport()
+    {
+        if (teleportPoint == null)
+        {
+            Debug.LogError("ยังไม่ได้ใส่ Teleport Point");
+            return;
+        }
+
+        transform.position = teleportPoint.position;
+    }
+    IEnumerator TeleportCooldown()
+    {
+        canTeleportNow = false;
+
+        float timer = teleportCooldown;
+
+        while (timer > 0)
+        {
+            if (teleportText != null)
+            {
+                teleportText.text = "Teleport: " + timer.ToString("F1");
+            }
+
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+
+        if (teleportText != null)
+        {
+            teleportText.text = "Teleport Ready!";
+        }
+
+        canTeleportNow = true;
     }
 
     private void OnCollisionEnter(Collision collision)
