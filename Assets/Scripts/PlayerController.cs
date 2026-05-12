@@ -60,6 +60,7 @@ public class PlayerController : MonoBehaviour
     private AudioSource playerAudio;
 
     public bool gameOver = false;
+    public GameOverMenu gameOverMenu;
 
     public void AddScore(int amount)
     {
@@ -83,12 +84,18 @@ public class PlayerController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        if (gameOverMenu == null)
+        {
+            gameOverMenu = FindObjectOfType<GameOverMenu>();
+        }
+
         currentHP = maxHP;
 
         Physics.gravity *= gravityModifier;
 
         currentAmmo = maxAmmo;
         UpdateAmmoUI();
+
         if (!canShoot)
         {
             ammoText.gameObject.SetActive(false);
@@ -104,7 +111,6 @@ public class PlayerController : MonoBehaviour
         UpdateHPUI();
 
         gameOver = false;
-
     }
 
     // Update is called once per frame
@@ -275,6 +281,12 @@ public class PlayerController : MonoBehaviour
                 playerAnim.SetBool("Death_b", true);
                 playerAnim.SetInteger("DeathType_int", 1);
                 dirtParticle.Stop();
+
+                if (gameOverMenu != null)
+                {
+                    gameOverMenu.ShowGameOver();
+                }
+
             }
         }
 

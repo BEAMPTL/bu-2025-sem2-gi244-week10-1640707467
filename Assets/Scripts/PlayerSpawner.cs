@@ -7,10 +7,10 @@ public class PlayerSpawner : MonoBehaviour
 
     void Start()
     {
-        int selectedIndex = PlayerPrefs.GetInt("SelectedCharacter", 0);
+        int selectedCharacter = PlayerPrefs.GetInt("SelectedCharacter", 0);
 
         Instantiate(
-            playerPrefabs[selectedIndex],
+            playerPrefabs[selectedCharacter],
             spawnPoint.position,
             spawnPoint.rotation
         );

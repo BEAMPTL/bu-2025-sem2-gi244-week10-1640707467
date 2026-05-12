@@ -1477,6 +1477,15 @@ MonoBehaviour:
   gravityModifier: 2
   explosionParticle: {fileID: 7904645513781583213}
   dirtParticle: {fileID: 7027990094054674028}
+  canTeleport: 0
+  teleportPoint: {fileID: 0}
+  teleportCooldown: 5
+  teleportText: {fileID: 0}
+  canMelee: 0
+  attackRange: 3
+  meleeCooldown: 3
+  meleeText: {fileID: 0}
+  canShoot: 1
   bulletPrefab: {fileID: 5258793604574951362, guid: 8f294f1f69ec10b4e882d22d501ad3c9, type: 3}
   firePoint: {fileID: 5173241825198482909}
   maxAmmo: 3
@@ -1492,7 +1501,8 @@ MonoBehaviour:
   isDashing: 0
   jumpSfx: {fileID: 8300000, guid: 08ab7053d586c458db3774d33c141a4b, type: 3}
   crashSfx: {fileID: 8300000, guid: 4bcde6de2166e41e284ec46d8a01fb90, type: 3}
-  gameOver: 0
+  gameOver: 1
+  gameOverMenu: {fileID: 0}
 --- !u!82 &3066589688274682926
 AudioSource:
   m_ObjectHideFlags: 0
