@@ -278,6 +278,7 @@ public class PlayerController : MonoBehaviour
             {
                 Debug.Log("Game Over!");
                 gameOver = true;
+
                 playerAnim.SetBool("Death_b", true);
                 playerAnim.SetInteger("DeathType_int", 1);
                 dirtParticle.Stop();
@@ -287,6 +288,12 @@ public class PlayerController : MonoBehaviour
                     gameOverMenu.ShowGameOver();
                 }
 
+                OnlineLeaderboard leaderboard = FindObjectOfType<OnlineLeaderboard>();
+
+                if (leaderboard != null)
+                {
+                    leaderboard.SubmitScore(score);
+                }
             }
         }
 
