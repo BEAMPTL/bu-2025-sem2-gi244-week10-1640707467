@@ -7,7 +7,7 @@ using TMPro;
 public class PlayerController : MonoBehaviour
 {
     public float jumpForce;
-    public float gravityModifier;
+    public float gravityModifier; 
     public ParticleSystem explosionParticle;
     public ParticleSystem dirtParticle;
 
@@ -91,7 +91,7 @@ public class PlayerController : MonoBehaviour
 
         currentHP = maxHP;
 
-        Physics.gravity *= gravityModifier;
+        Physics.gravity = new Vector3(0, -9.81f * gravityModifier, 0);
 
         currentAmmo = maxAmmo;
         UpdateAmmoUI();
